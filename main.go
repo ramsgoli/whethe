@@ -3,10 +3,12 @@ package main
 import(
     "fmt"
     "os"
+    "log"
     "io/ioutil"
     "net/http"
     "encoding/json"
     "github.com/subosito/gotenv"
+    "time"
 )
 
 const (
@@ -14,7 +16,7 @@ const (
 )
 
 type Weather struct {
-    name string
+    Name string `json:"name"`
 }
 
 func init() {
@@ -30,25 +32,33 @@ func main() {
     city := os.Args[1]
     url := fmt.Sprintf("http://%s/data/2.5/weather?q=%s&units=imperial&APPID=%s", API_URL, city, os.Getenv("APP_ID"))
 
-    resp, err := http.Get(url)
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "error: %v\n", err)
+    client := http.Client{
+        Timeout: time.Second * 2, // set a timeout of two seconds for the api call
     }
 
-    b, err := ioutil.ReadAll(resp.Body) // b is a byte array
-    resp.Body.Close()
+    req, err := http.NewRequest(http.MethodGet, url, nil)
     if err != nil {
-        fmt.Fprintf(os.Stderr, "error reading resp data: %v\n", err)
-        os.Exit(1)
+        log.Fatal(err)
     }
 
-    // Unmarshall byte array to a go data type
-    var w Weather
-    err = json.Unmarshal(b, &w)
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "error reading resp data: %v\n", err)
-        os.Exit(1)
+    req.Header.Set("User-Agent", "spacecount-tutorial")
+
+    res, getErr := client.Do(req)
+    if getErr != nil {
+        log.Fatal(getErr)
     }
 
-    fmt.Println(w)
+    body, readErr := ioutil.ReadAll(res.Body)
+    if readErr != nil {
+        log.Fatal(readErr)
+    }
+
+    weather := Weather{}
+
+    jsonErr := json.Unmarshal(body, &weather)
+    if jsonErr != nil {
+        log.Fatal(jsonErr)
+    }
+
+    fmt.Println(weather.Name)
 }
