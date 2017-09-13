@@ -8,6 +8,7 @@ import(
     "net/http"
     "encoding/json"
     "github.com/subosito/gotenv"
+    "github.com/ramsgoli/whether/geoloc"
     "time"
 )
 
@@ -27,13 +28,9 @@ func init() {
 }
 
 func main() {
-    if len(os.Args) > 2 {
-        fmt.Fprintf(os.Stderr, "command called with %d arguments, should be called with only 1\n", len(os.Args) - 1)
-        os.Exit(1)
-    }
 
-    city := os.Args[1]
-    url := fmt.Sprintf("http://%s/data/2.5/weather?q=%s&units=imperial&APPID=%s", API_URL, city, os.Getenv("APP_ID"))
+    lat, long := geoloc.Locate(os.Getenv("GOOGLE_MAPS_API_KEY")
+    url := fmt.Sprintf("http://%s/data/2.5/weather?q=%s&units=imperial&APPID=%s", API_URL, city, os.Getenv("OWM_APP_ID"))
 
     // We use http.Client to have more control over headers, redirect policy, etc
     client := http.Client{
