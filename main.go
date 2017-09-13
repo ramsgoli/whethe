@@ -15,10 +15,6 @@ const (
     API_URL string = "api.openweathermap.org"
 )
 
-type Main struct {
-    Temp float64 `json:"temp"`
-}
-
 type Weather struct {
     Name string `json:"name"`
     Main struct {
@@ -58,6 +54,7 @@ func main() {
     // defer the closing of the res body
     defer res.Body.Close()
 
+    // read the http response body into a byte stream
     body, readErr := ioutil.ReadAll(res.Body)
     if readErr != nil {
         log.Fatal(readErr)
@@ -65,6 +62,7 @@ func main() {
 
     weather := Weather{}
 
+    // unmarshal the byte stream into a Go data type
     jsonErr := json.Unmarshal(body, &weather)
     if jsonErr != nil {
         log.Fatal(jsonErr)
