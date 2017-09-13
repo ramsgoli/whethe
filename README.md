@@ -20,5 +20,11 @@ $ go get github.com/ramsgoli/whether
 ```
 # get the weather based off of your current location
 $ whether
+
+# get the weather based off a certain city (for a city with multiple words, wrap the name in quotes)
+$ whether -city petaluma
+>>> The current temperature in Petaluma is 65.43 degrees
+$ whether -city "los angeles"
+>>> The current temperature in Los Angeles is 70.32 degrees
 ```
 

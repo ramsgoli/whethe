@@ -10,10 +10,15 @@ import(
     "github.com/subosito/gotenv"
     "github.com/ramsgoli/whether/geoloc"
     "time"
+    "flag"
 )
 
 const (
     API_URL string = "api.openweathermap.org"
+)
+
+var (
+    city string
 )
 
 type Weather struct {
@@ -24,13 +29,29 @@ type Weather struct {
 }
 
 func init() {
+    // Load environment variables
     gotenv.Load()
+
+    flag.StringVar(&city, "city", "", "City to get the weather from")
+
+    flag.Usage = func() {
+        flag.PrintDefaults()
+    }
+
+    flag.Parse()
 }
 
 func main() {
 
-    lat, long := geoloc.Locate(os.Getenv("GOOGLE_MAPS_API_KEY"))
-    url := fmt.Sprintf("http://%s/data/2.5/weather?lat=%f&lon=%f&units=imperial&APPID=%s", API_URL, lat, long, os.Getenv("OWM_APP_ID"))
+    var url string
+    if city == "" {
+        // get latitude and longitude of client
+        lat, long := geoloc.Locate(os.Getenv("GOOGLE_MAPS_API_KEY"))
+        url = fmt.Sprintf("http://%s/data/2.5/weather?lat=%f&lon=%f&units=imperial&APPID=%s", API_URL, lat, long, os.Getenv("OWM_APP_ID"))
+    } else {
+        // use the city
+        url = fmt.Sprintf("http://%s/data/2.5/weather?q=%s&units=imperial&APPID=%s", API_URL, city, os.Getenv("OWM_APP_ID"))
+    }
 
     // We use http.Client to have more control over headers, redirect policy, etc
     client := http.Client{
