@@ -33,6 +33,7 @@ func init() {
     gotenv.Load()
 
     flag.StringVar(&city, "city", "", "City to get the weather from")
+    flag.StringVar(&city, "c", "", "(alias) City to get the weather from")
 
     flag.Usage = func() {
         flag.PrintDefaults()
