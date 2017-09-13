@@ -29,8 +29,8 @@ func init() {
 
 func main() {
 
-    lat, long := geoloc.Locate(os.Getenv("GOOGLE_MAPS_API_KEY")
-    url := fmt.Sprintf("http://%s/data/2.5/weather?q=%s&units=imperial&APPID=%s", API_URL, city, os.Getenv("OWM_APP_ID"))
+    lat, long := geoloc.Locate(os.Getenv("GOOGLE_MAPS_API_KEY"))
+    url := fmt.Sprintf("http://%s/data/2.5/weather?lat=%f&lon=%f&units=imperial&APPID=%s", API_URL, lat, long, os.Getenv("OWM_APP_ID"))
 
     // We use http.Client to have more control over headers, redirect policy, etc
     client := http.Client{
@@ -65,5 +65,5 @@ func main() {
         log.Fatal(jsonErr)
     }
 
-    fmt.Printf("%s: %f\n", weather.Name, weather.Main.Temp)
+    fmt.Printf("The current temperature in %s is %.2f degrees\n", weather.Name, weather.Main.Temp)
 }

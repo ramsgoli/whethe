@@ -3,13 +3,22 @@
 a command line tool to fetch the weather, built with love and go
 
 ### Setup
-* create an OpenWeatherMap account and sign up for a free api key
-* create an environment file to hold your app id
+This tool depends on Google Maps Api to fetch your current geo-coordinates, and OpenWeatherMap to fetch the weather. 
+To use this tool, you need to sign up for a Google Maps API key [here](https://developers.google.com/maps/documentation/javascript/get-api-key) and an OpenWeatherMap app [here](https://openweathermap.org/price). If you're my friend, you can ask me for mine. 
+
+* create an environment file `.env` to hold your Google API key and OWM APP id
 ```
-echo "export APP_ID={your app id}" > .env
+export GOOGLE_MAPS_API_KEY={your API key}
+export OWM_APP_ID={your App id}
 ```
-* Clone the project and build the source code
+* get the source code (via go)
 ```
-go build
+$ go get github.com/ramsgoli/whether
+```
+
+### Usage
+```
+# get the weather based off of your current location
+$ whether
 ```
 

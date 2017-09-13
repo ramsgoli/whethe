@@ -13,19 +13,19 @@ const (
 )
 
 // Hold the response data from google
-type location struct {
-    accuracy float64
-    location struct {
-        lat float64
-        lng float64
-    }
+type Location struct {
+    Accuracy float64 `json:"accuracy"`
+    Location struct {
+        Lat float64 `json:"lat"`
+        Lng float64 `json:"lng"`
+    } `json:"location"`
 }
 
 // Use the google API key to fetch the current latitude and longitude
-func Locate(API_URL string) (float64, float64) {
-    endpoint := fmt.Sprintf("%s?key=%s", API_URL, API_URL
+func Locate(API_KEY string) (float64, float64) {
+    endpoint := fmt.Sprintf("%s?key=%s", API_URL, API_KEY)
 
-    resp, postErr := http.Post(endpoint)
+    resp, postErr := http.Post(endpoint, "application/json", nil)
     if postErr != nil {
         log.Fatal("post error: %v\n", postErr)
     }
@@ -38,15 +38,15 @@ func Locate(API_URL string) (float64, float64) {
         log.Fatal("read error: %v\n", readErr)
     }
 
-    location := location{}
+    location := Location{}
 
     // Unmarshal the byte stream stored in body into a Go data type
-    jsonErr = json.Unmarshal(body, &location)
+    jsonErr := json.Unmarshal(body, &location)
     if jsonErr != nil {
         log.Fatal("json error: %v\n", jsonErr)
     }
 
-    return location.location.lat, location.location.lng
+    return location.Location.Lat, location.Location.Lng
 }
 
 
