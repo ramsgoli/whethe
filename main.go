@@ -9,7 +9,6 @@ import(
     "encoding/json"
     "github.com/subosito/gotenv"
     "github.com/ramsgoli/whether/geoloc"
-    "time"
     "flag"
 )
 
@@ -23,6 +22,11 @@ var (
 
 type Weather struct {
     Name string `json:"name"`
+    Id int `json:"id"`
+    Dt int `json:"dt"`
+    Clouds struct {
+        All int `json:"all"`
+    } `json:"clouds"`
     Main struct {
         Temp float64 `json:"temp"`
     } `json:"main"`
@@ -54,18 +58,7 @@ func main() {
         url = fmt.Sprintf("http://%s/data/2.5/weather?q=%s&units=imperial&APPID=%s", API_URL, city, os.Getenv("OWM_APP_ID"))
     }
 
-    // We use http.Client to have more control over headers, redirect policy, etc
-    client := http.Client{
-        Timeout: time.Second * 2, // set a timeout of two seconds for the api call
-    }
-
-    req, err := http.NewRequest(http.MethodGet, url, nil)
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    // Do sends an http request and returns an http response
-    res, getErr := client.Do(req)
+    res, getErr := http.Get(url)
     if getErr != nil {
         log.Fatal(getErr)
     }
