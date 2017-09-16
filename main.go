@@ -10,6 +10,7 @@ import(
     "github.com/subosito/gotenv"
     "github.com/ramsgoli/whether/geoloc"
     "flag"
+    "time"
 )
 
 const (
@@ -58,7 +59,12 @@ func main() {
         url = fmt.Sprintf("http://%s/data/2.5/weather?q=%s&units=imperial&APPID=%s", API_URL, city, os.Getenv("OWM_APP_ID"))
     }
 
-    res, getErr := http.Get(url)
+    // Build an http client so we can have control over timeout
+    client := &http.Client{
+        Timeout: time.Second * 2,
+    }
+
+    res, getErr := client.Get(url)
     if getErr != nil {
         log.Fatal(getErr)
     }
