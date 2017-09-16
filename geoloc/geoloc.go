@@ -26,7 +26,7 @@ func Locate(API_KEY string) (float64, float64, error) {
 
     resp, postErr := http.Post(endpoint, "application/json", nil)
     if postErr != nil {
-        return nil, nil, postErr
+        return 0, 0, postErr
     }
 
     // Make sure we close the response body
@@ -34,7 +34,7 @@ func Locate(API_KEY string) (float64, float64, error) {
 
     body, readErr := ioutil.ReadAll(resp.Body)
     if readErr != nil {
-        return nil, nil, readErr
+        return 0, 0, readErr
     }
 
     location := Location{}
@@ -42,7 +42,7 @@ func Locate(API_KEY string) (float64, float64, error) {
     // Unmarshal the byte stream stored in body into a Go data type
     jsonErr := json.Unmarshal(body, &location)
     if jsonErr != nil {
-        return nil, nil, jsonErr
+        return 0, 0, jsonErr
     }
 
     return location.Location.Lat, location.Location.Lng, nil
