@@ -33,6 +33,13 @@ type Weather struct {
     } `json:"main"`
 }
 
+func apiKeysPresent() bool {
+    if (os.Getenv("OWM_APP_ID") == "" || os.Getenv("GOOGLE_MAPS_API_KEY") == "") {
+        return false
+    }
+    return true
+}
+
 func init() {
     // Load environment variables
     gotenv.Load()
@@ -49,6 +56,11 @@ func init() {
 
 func main() {
 
+    // check if api keys are present before attempting to make request
+    if !apiKeysPresent() {
+        fmt.Println("\nNo api keys present\n")
+        os.Exit(1)
+    }
     var url string
     if city == "" {
         // get latitude and longitude of client
