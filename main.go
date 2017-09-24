@@ -57,15 +57,14 @@ func main() {
 		// get latitude and longitude of client
 		lat, long, err := geoloc.Locate(os.Getenv("GOOGLE_MAPS_API_KEY"))
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Error with CurrentWeatherFromCity ", err)
 		}
-		fmt.Println(lat, long)
+		currentWeather, err = owm.CurrentWeatherFromCoordinates(lat, long)
 
     } else {
         // use the city
         currentWeather, err = owm.CurrentWeatherFromCity(city)
 		if (err != nil) {
-            log.Fatal("Error with CurrentWeatherFromCity", err)
         }
     }
 
