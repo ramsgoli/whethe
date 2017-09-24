@@ -51,20 +51,25 @@ func main() {
     owm := openweathermap.OpenWeatherMap{API_KEY: os.Getenv("OWM_APP_ID")}
 
     var currentWeather *openweathermap.CurrentWeatherResponse
-    var err error
+	var weatherErr error
 
     if city == "" {
 		// get latitude and longitude of client
-		lat, long, err := geoloc.Locate(os.Getenv("GOOGLE_MAPS_API_KEY"))
-		if err != nil {
-			log.Fatal("Error with CurrentWeatherFromCity ", err)
+		lat, long, geoErr := geoloc.Locate(os.Getenv("GOOGLE_MAPS_API_KEY"))
+		if (geoErr != nil) {
+			log.Fatal("Error with GeoLocating: ", geoErr)
 		}
-		currentWeather, err = owm.CurrentWeatherFromCoordinates(lat, long)
+
+		currentWeather, weatherErr = owm.CurrentWeatherFromCoordinates(lat, long)
+		if (weatherErr != nil) {
+			log.Fatal("Error with CurrentWeatherFromCoordinates: ", weatherErr)
+		}
 
     } else {
         // use the city
-        currentWeather, err = owm.CurrentWeatherFromCity(city)
-		if (err != nil) {
+        currentWeather, weatherErr = owm.CurrentWeatherFromCity(city)
+		if (weatherErr != nil) {
+			log.Fatal("Error with CurrentWeatherFrom City: ", weatherErr)
         }
     }
 
