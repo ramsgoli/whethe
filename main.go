@@ -7,6 +7,7 @@ import(
     "github.com/subosito/gotenv"
 	"github.com/ramsgoli/openweathermap"
     "github.com/ramsgoli/whether/geoloc"
+	"github.com/mitchellh/colorstring"
     "flag"
 )
 
@@ -73,5 +74,5 @@ func main() {
         }
     }
 
-    fmt.Printf("The current temperature in %s is %.2f degrees\n", currentWeather.Name, currentWeather.Main.Temp)
+    fmt.Printf("The current temperature in %s is %.2f degrees\n", colorstring.Color("[blue]"+currentWeather.Name), currentWeather.Main.Temp)
 }
