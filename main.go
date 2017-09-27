@@ -41,6 +41,20 @@ func init() {
     flag.Parse()
 }
 
+
+func formatTemperature(temp float64) string {
+	switch {
+	case temp < 60.0:
+		return fmt.Sprintf("[blue]%.2f", temp)
+	case temp < 70.0:
+		return fmt.Sprintf("[yellow]%.2f", temp)
+	case temp < 80.0:
+		return fmt.Sprintf("[light_red]%.2f", temp)
+	default:
+		return fmt.Sprintf("[red]%.2f", temp)
+	}
+}
+
 func main() {
 
     // check if api keys are present before attempting to make request
@@ -74,5 +88,5 @@ func main() {
         }
     }
 
-    fmt.Printf("The current temperature in %s is %.2f degrees\n", colorstring.Color("[blue]"+currentWeather.Name), currentWeather.Main.Temp)
+    fmt.Printf("The current temperature in %s is %s degrees\n", colorstring.Color("[blue]"+currentWeather.Name), colorstring.Color(formatTemperature(currentWeather.Main.Temp)))
 }
